@@ -6,8 +6,19 @@
     <script src="./js/jquery-1.7.min.js" type="text/javascript"></script>
     <script src="./js/main.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <script>
+init = function() {
+    console.log("loading");
+    document.addEventListener("deviceready", onDeviceReady, false);
+    onDeviceReady();
+}
+    </script>
 </head>
-<body>
+<body  onload="init();">
+<header>
+<a href="#" id="reload"><img src="images/update.png">Reload</a>
+<a href="#" id="clear" style="float:right;">Clear read list<img src="images/clear.png"></a>
+</header>
 <div id="comicContainer">	
 </div>
 </body>

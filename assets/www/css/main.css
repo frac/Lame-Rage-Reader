@@ -2,6 +2,8 @@ body {
 	background-color:#212121;
 	font-family:"Arial, Helvetica, sans-serif";
 	color:white;
+    margin-left: 0px;
+    padding-left: 0px;
 }
 
 ul.page {
@@ -11,15 +13,16 @@ ul.page {
 
 li.comicContainer {
 	text-align:center;
-	padding:10px 20px 20px;
-	margin:30px auto;
+	/*padding:10px 20px 20px;
+	margin:30px auto;*/
 }
-img {
+
+.the_comics{
 	width:400px;
     
 }
 div.comicHeader {
-	width:400px;
+	width:100%;
 }
 
 h3.comicTitle {
@@ -29,6 +32,8 @@ h3.comicTitle {
 	padding:22px;
 }
 
-a.commentsLink {
+a {
 	color:white;
 }
+
+
