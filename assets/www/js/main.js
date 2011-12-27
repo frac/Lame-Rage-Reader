@@ -1,9 +1,10 @@
+"use strict";
 var page = 0,
     nextURL = "",
     items,
     loading = false,
-    //base_url = "http://www.reddit.com/r/wtf/new/.json?sort=new"
-    //base_url = "http://www.reddit.com/.json?feed=7e73de803f62396bfe33e75fd1aa49a48958cdd0&user=fractalk".
+    //base_url = "http://www.reddit.com/r/gonewild/.json?foo=1",
+    //base_url = "http://www.reddit.com/.json?feed=7e73de803f62396bfe33e75fd1aa49a48958cdd0&user=fractalk",
 
     //base_url = "http://www.reddit.com/r/pics/new/.json?sort=new",
     base_url = "http://www.reddit.com/r/fffffffuuuuuuuuuuuu/.json",
@@ -11,9 +12,15 @@ var page = 0,
 
 
 
+include = function(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+},
+append = function(arr,obj) {
+    arr.push(obj);
+},
 
-page_error = function(res, stat) {
-    console.log("erro ao pegar pagina "+ res);
+page_error = function(res, stat, foo) {
+    console.log("erro ao pegar pagina "+ res.responseText + " - " + foo);
 },
 
 
@@ -21,8 +28,9 @@ pageLoadSuccess = function(response) {
     items = [];
     console.log("jsonp after " + response.data.after );
     $.each(response.data.children, function(index, val) {
-        console.log("peguei "+ val.data.id);
-        if (val.data.domain === "imgur.com") {
+        console.log("peguei "+ val.data.domain);
+        if (val.data.domain === "imgur.com" || val.data.domain === "i.imgur.com") {
+		console.log("apresentando");
             if ( !include(seen, val.data.id) ) {
                 var imgURL = val.data.url;
 
@@ -40,8 +48,8 @@ pageLoadSuccess = function(response) {
         }
     });
     console.log("salvando "+ seen.length +" itens");
-    if (seen.length > 200){
-        seen.splice(0,seen.length - 200);
+    if (seen.length > 600){
+        seen.splice(0,seen.length - 600);
     }
     window.localStorage.setItem("seen", seen);
 
@@ -60,19 +68,7 @@ pageLoadSuccess = function(response) {
         load_comics();    
     }
 
-};
-clear_history =  function() {
-    console.log("limpando a bagaca");
-    seen = [];
-    window.localStorage.clear();
-    window.location.reload();
-};
-include = function(arr,obj) {
-    return (arr.indexOf(obj) != -1);
-};
-append = function(arr,obj) {
-    arr.push(obj);
-};
+},
 load_comics = function() {
     loading = true;
     $.ajax({
@@ -83,7 +79,13 @@ load_comics = function() {
         success: pageLoadSuccess,
         error: page_error
     });
-};
+},
+clear_history =  function() {
+    console.log("limpando a bagaca");
+    seen = [];
+    window.localStorage.clear();
+    window.location.reload();
+},
 
 //$(document).ready(
 
