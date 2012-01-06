@@ -3,7 +3,8 @@ var page = 0,
     nextURL = "",
     items,
     loading = false,
-    //base_url = "http://www.reddit.com/r/gonewild/.json?foo=1",
+    //base_url = "http://www.reddit.com/r/gonewild/.json",
+    //base_url = "http://www.reddit.com/r/gonewildplus/.json",
     //base_url = "http://www.reddit.com/.json?feed=7e73de803f62396bfe33e75fd1aa49a48958cdd0&user=fractalk",
 
     //base_url = "http://www.reddit.com/r/pics/new/.json?sort=new",
@@ -34,13 +35,24 @@ pageLoadSuccess = function(response) {
             if ( !include(seen, val.data.id) ) {
                 var imgURL = val.data.url;
 
-                var extPos = val.data.url.lastIndexOf(".");
-                if (extPos != -1 && extPos != 12) {
-                    imgURL = imgURL.substring(0, extPos);
-                }
+                //if (! val.data.title.match(re)) {
+                //    console.log("rejected "+ val.data.title);
+                //    return;
+                //}
 
-                imgURL = imgURL + ".png";
-                items.push('<li class="comicContainer" id="' + index + '"><div class="comicHeader"><h3 class="comicTitle">' + val.data.title + '</h3><a class="commentsLink" href="http://www.reddit.com' + val.data.permalink + '">Comments (' + val.data.num_comments + ')</a></div><img src="' + imgURL + '" class="the_comics"/></li>');
+
+
+                //var extPos = val.data.url.lastIndexOf(".");
+                //console.log("url "+ imgURL +" posicao " + extPos);
+                var ext = imgURL.substring(imgURL.length-4, imgURL.length).toLowerCase();
+                console.log("url "+ imgURL +" extensao " + ext);
+                if (imgURL.indexOf("/a/") > 0) {
+                    items.push('<li class="comicContainer" id="' + index + '"><div class="comicHeader"><h3 class="comicTitle">' + val.data.title + '</h3><a class="commentsLink" href="http://www.reddit.com' + val.data.permalink + '">Comments (' + val.data.num_comments + ')</a></div><a href="' + imgURL + '" >gallery</a></li>');
+            
+                } else if (ext !== ".jpg" || ext !== ".png" || ext !== ".gif"){
+                    imgURL = imgURL + ".png";
+                    items.push('<li class="comicContainer" id="' + index + '"><div class="comicHeader"><h3 class="comicTitle">' + val.data.title + '</h3><a class="commentsLink" href="http://www.reddit.com' + val.data.permalink + '">Comments (' + val.data.num_comments + ')</a></div><img src="' + imgURL + '" class="the_comics"/></li>');
+                }
                 append(seen, val.data.id);
             } else {
                 console.log("ja vi o "+ val.data.permalink);
@@ -108,25 +120,8 @@ onDeviceReady = function() {
 
 $(window).scroll(function () {
 	if (!loading) {
-		var scrollPosition = window.pageYOffset;
-		var windowSize     = window.innerHeight;
-		var bodyHeight     = $(document).height();
-		
-		var distanceFromBottom = bodyHeight - (scrollPosition + windowSize);
-
-		var comicsSelector = "#page" + page + " > li";
-
-		var last3ComicsHeight = 0;
-		var comics = $(comicsSelector);
-		var numberOnPage = comics.size();
-		var firstIndice = numberOnPage - 4;
-
-		comics.slice(firstIndice, numberOnPage - 1).each(function (index) {
-			last3ComicsHeight += $(this).height();
-		});
-
-		if (distanceFromBottom < last3ComicsHeight) {
-            load_comics();
+		if ($(":below-the-fold").filter("li").length < 3){
+            		load_comics();
 		}
 	}
 });
